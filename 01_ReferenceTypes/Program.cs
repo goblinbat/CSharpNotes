@@ -75,7 +75,7 @@ namespace _01_ReferenceTypes
 
             /// Classes
             Random rng = new Random();
-            int randNum = rng.Next();   // can add min and max values, limiting what numbers can pop up (ex: (0,100) would limit it to numbers btw 0 and 100)
+            int randNum = rng.Next();   // can add min and max values, limiting what numbers can pop up (ex: (0,100) would limit it to numbers btw 0 (inclusive) and 100 (exclusive) (available numbers are 0-99))
             Console.WriteLine(randNum);
             
             Console.ReadKey();
