@@ -12,6 +12,11 @@ namespace _00_VariablesAndValueTypes
 
         static void Main(string[] args)
         {
+            /// ctrl+e+w   activates word wrap (same as alt+z in visual studio code)
+            /// ctrl+k+d   cleans up code (if stuff is out of line it'll reindent/deindent, etc)
+            /// ctrl+shift+/    comments out selected code
+            /// shortcut for Console.WriteLine: type cw and hit tab twice
+
             bool isDeclared;
             isDeclared = true;
 
