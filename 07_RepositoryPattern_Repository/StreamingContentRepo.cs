@@ -39,12 +39,12 @@ namespace _07_RepositoryPattern_Repository
             return null;    // return null is not best practice but it works and we're not doing a lot of exception handling or anything rn
         }
 
-        public List<StreamingContent> GetByFamilyFriendly()
+        public List<StreamingContent> GetByFamilyFriendly(bool familyFriendly)
         {
             List<StreamingContent> friendlies = new List<StreamingContent>();
             foreach (StreamingContent item in _contentDirectory)
             {
-                if (item.IsFamilyFriendly == true)
+                if (item.IsFamilyFriendly == familyFriendly)
                 {
                     friendlies.Add(item);
                 }
