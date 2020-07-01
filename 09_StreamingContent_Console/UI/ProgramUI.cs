@@ -14,6 +14,7 @@ namespace _09_StreamingContent_Console.UI
 
         public void Run()
         {
+            SeedContentList();
             RunMenu();
         }
 
@@ -37,23 +38,24 @@ namespace _09_StreamingContent_Console.UI
                         ShowAllContent();
                         break;
                     case "2":   // find by title
+                        FindByTitle();
                         break;
                     case "3":   // add new
                         CreateNewContent();
                         break;
                     case "4":   // remove
+                        RemoveContent();
                         break;
                     case "5":   // exit
                         continueRunning = false;
                         break;
-                    default:    // invalid input
-                        Console.WriteLine("Please enter a valid number between 1 and 5\n" +
-                            "Press any key to continue");
-                        Console.ReadKey();
-                        break;
+                    //default:    // invalid input
+                    //    Console.WriteLine("Please enter a valid number between 1 and 5\n" +
+                    //        "Press any key to continue");
+                    //    Console.ReadKey();
+                    //    break;
                 }
             }
-            Console.WriteLine("Have a nice day!");
         }
 
         private void CreateNewContent()
@@ -125,13 +127,81 @@ namespace _09_StreamingContent_Console.UI
             List<StreamingContent> listOfContent = _streamingRepo.GetContents();
             foreach (StreamingContent contentVariable in listOfContent)
             {
-                Console.WriteLine($"{contentVariable.Title}: {contentVariable.Description}\n" +
-                    $"{contentVariable.StarRating} stars, rated {contentVariable.MaturityRating}, genre: {contentVariable.TypeOfGenre}\n\n");
+                DisplayContent(contentVariable);
             }
             Console.WriteLine("Press any key to continue");
             Console.ReadKey();
         }
 
+        private void DisplayContent(StreamingContent content)
+        {
+            Console.WriteLine($"{content.Title}: {content.Description}\n" +
+                    $"{content.StarRating} stars, rated {content.MaturityRating}, genre: {content.TypeOfGenre}\n" +
+                    $"Family friendly: {content.IsFamilyFriendly}\n" +
+                    $"_______________________________________\n");
+        }
 
+        private void FindByTitle()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the title you're searching for: ");
+            string searchTitle = Console.ReadLine();
+            StreamingContent foundTitle = _streamingRepo.GetByTitle(searchTitle);
+            if(foundTitle != null)
+            {
+                DisplayContent(foundTitle);
+            }
+            else
+            {
+                Console.WriteLine("No results found");
+            }
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+        }
+
+        private void RemoveContent()
+        {
+            Console.WriteLine("Which item would you like to remove? ");
+            List<StreamingContent> contentList = _streamingRepo.GetContents();
+            int count = 0;
+            foreach(StreamingContent content in contentList)
+            {
+                count++;
+                Console.WriteLine($"{count}. {content.Title}");
+            }
+            int targetContentId = int.Parse(Console.ReadLine());
+            int targetIndex = targetContentId - 1;  // to offset count++
+            if(targetIndex >= 0 && targetIndex < contentList.Count)
+            {
+                StreamingContent desiredContent = contentList[targetIndex];
+                if (_streamingRepo.DeleteContent(desiredContent))
+                {
+                    Console.WriteLine($"Deleted {desiredContent.Title}");
+                }
+                else
+                {
+                    Console.WriteLine($"an error occurred and {desiredContent.Title} was not removed");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No content has that ID");
+            }
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+        }
+
+        private void SeedContentList()
+        {
+            StreamingContent movieOne = new StreamingContent("2020", "oh no", MaturityRating.PG_13, 1, GenreType.Horror);
+            StreamingContent movieTwo = new StreamingContent("Macy's lemonade stand", "Macy starts a lemonade stand for all her friends", MaturityRating.R, 3, GenreType.Thriller);
+            StreamingContent movieThree = new StreamingContent("Mothman", "All about the mothman", MaturityRating.NC_17, 4, GenreType.Documentary);
+            StreamingContent movieFour = new StreamingContent("Jasper", "Jasper and their friends go on adventures around their small town", MaturityRating.PG, 3, GenreType.Comedy);
+
+            _streamingRepo.AddContentToDirectory(movieOne);
+            _streamingRepo.AddContentToDirectory(movieTwo);
+            _streamingRepo.AddContentToDirectory(movieThree);
+            _streamingRepo.AddContentToDirectory(movieFour);
+        }
     }
 }
